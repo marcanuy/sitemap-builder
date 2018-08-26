@@ -7,6 +7,7 @@ Generate sitemaps from programmatically collected URLs.
 - Generates an index that points to compressed sitemaps files
 - each generated sitemap won't have more than the allowed amount of
   50.000 URLs
+- jinja2 templates
 
 # Install
 
