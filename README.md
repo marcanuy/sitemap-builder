@@ -16,19 +16,19 @@ pip install sitemap-builder
 
 # Usage
 
-Import 
+1. Import 
 
 ~~~
 from sitemap import Sitemap
 ~~~
 
-Initialize
+2. Initialize
 
 ~~~
 sitemap = Sitemap()
 ~~~
 
-Add urls to process them later:
+3. Add urls to process them later:
 
 ~~~
 sitemap.add_url("dummy-page")
@@ -36,8 +36,22 @@ sitemap.add_url("another-page")
 sitemap.add_url("category/foo-bar")
 ~~~
 
-Generate sitemap index and files
+4. Generate sitemap index and files
 
 ~~~
 sitemap.generate()
+~~~
+
+# Example:
+
+Generated files:
+
+~~~
+.
+├── sitemap.xml
+└── sitemaps
+    ├── sitemap-0.xml.gz
+    ├── sitemap-1.xml.gz
+    ├── sitemap-2.xml.gz
+	└── sitemap-3.xml.gz
 ~~~
