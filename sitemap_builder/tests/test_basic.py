@@ -6,13 +6,35 @@ from ..models import Item
 
 class TestSitemapClassMethods(unittest.TestCase):
 
+    def setUp(self):
+        self.sitemap = Sitemap()
+
     def test_add_item(self):
         item = ItemFactory.build()
-        sitemap = Sitemap()
 
-        sitemap.add_item(item)
+        self.sitemap.add_item(item)
 
-        self.assertIn(item, sitemap.urls)
+        self.assertIn(item, self.sitemap.urls)
+
+    def test_contains_url(self):
+        item = ItemFactory.build()
+        self.sitemap.urls.add(item)
+
+        self.assertTrue(item.loc, self.sitemap)
+
+    def test_not_contains_url(self):
+        item = ItemFactory.build()
+        self.sitemap.urls.add(item)
+
+        self.assertNotIn("https://a.com/b", self.sitemap)
+
+    def test_add_item_url(self):
+        url = "https://example.com/foo/bar"
+
+        self.sitemap.add_item(url)
+
+        self.assertIn(url, self.sitemap)
+        
 
 class TestItemModel(unittest.TestCase):
 
@@ -56,6 +78,16 @@ class TestItemModel(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             item = ItemFactory.build(change_frequency=changefreq)
+        
+    def test_changefreq_can_be_empty(self):
+        item = ItemFactory.build(change_frequency=None)
+        
+        self.assertEqual(None, item.change_frequency)
+
+    def test_priority_can_be_empty(self):
+        item = ItemFactory.build(priority=None)
+        
+        self.assertEqual(None, item.priority)
         
     def test_priority_valid_value(self):
         priority = 0.2

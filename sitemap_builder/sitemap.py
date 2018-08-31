@@ -14,6 +14,8 @@ import gzip
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 
+from .models import Item
+
 TEMPLATE_ENVIRONMENT = Environment(
     loader=PackageLoader('sitemap_builder', 'templates'),
     autoescape=select_autoescape(['html', 'xml']),
@@ -33,8 +35,28 @@ class Sitemap():
         self.hostname = hostname
         
     def add_item(self, item):
+        """Adds an item to the sitemap
+        Item can be:
+        - url: add_item("https://example.com/foo")
+        - item: add_item(Item(url="..", priority=0.0, ..))
+
+        :param <str,Item> item:
+        """
+        if isinstance(item, str):
+            item = Item(item)
         self.urls.add(item)
 
+    def __contains__(self, url):
+        """Checks if sitemap has an item with the url as loc
+        https://docs.python.org/3/reference/datamodel.html#object.__contains__
+
+        :param str url: The url to look for in sitemap's items
+        :return boolean: 
+        """
+        urls = [url.loc for url in self.urls]
+        result = url in urls
+        return result
+        
     def get_urls(self):
         return list(self.urls)
     
