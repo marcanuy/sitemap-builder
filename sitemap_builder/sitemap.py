@@ -22,10 +22,10 @@ TEMPLATE_ENVIRONMENT = Environment(
     extensions=['jinja2.ext.do'])
 
 
-
-
 class Sitemap():
+    """ """
 
+    # set of Items to generate the Sitemap
     urls = set()
     
     def __init__(self,
@@ -78,6 +78,8 @@ class Sitemap():
             os.makedirs(self.sitemap_index_dir)
 
     def generate(self):
+        if not self.hostname:
+            raise ValueError("Hostname required")
         filename_urls = []
         os.makedirs(os.path.join(self.output_dir, 'sitemaps'))
         for index,urls in enumerate(self._sitemap_chunks()):

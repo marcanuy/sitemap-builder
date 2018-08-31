@@ -106,4 +106,4 @@ class Item():
 
     def __str__(self):
         """Object String representation"""
-        return "{} - {} - {} - {}".format(self.loc,self.last_mod, self.change_frequency, self.priority)
+        return "{} - {} - {} - {}".format(self.loc,self.last_modification, self.change_frequency, self.priority)

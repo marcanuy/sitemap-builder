@@ -1,6 +1,6 @@
 import unittest
 
-from ..factories import ItemFactory
+from ..factories import ItemFactory, SitemapFactory
 from ..sitemap import Sitemap
 from ..models import Item
 
@@ -35,6 +35,16 @@ class TestSitemapClassMethods(unittest.TestCase):
 
         self.assertIn(url, self.sitemap)
         
+    
+    # def test_generate_sitemap(self):
+    #     sitemap = SitemapFactory()
+
+    #     sitemap.generate()
+
+    def test_generate_requires_hostname(self):
+        sitemap = SitemapFactory(hostname=None)
+        with self.assertRaises(ValueError):
+            sitemap.generate()
 
 class TestItemModel(unittest.TestCase):
 
