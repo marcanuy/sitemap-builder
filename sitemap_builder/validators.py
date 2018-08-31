@@ -1,5 +1,7 @@
 from urllib.parse import urlparse
 
+
+
 def valid_uri(uri):
     """Checks for a well formed URI that includes protocol
 
@@ -22,6 +24,35 @@ def valid_uri_length(uri):
     result = len(uri) <= 2048
     return result
 
+def valid_change_frequency(changefreq):
+    """Checks an allowed value of changefreq is used
+
+    :param str changefreq:
+    :return boolean:
+    """
+    from .models import CHANGE_FREQ
+    result = changefreq in CHANGE_FREQ
+    return result
+
+def valid_priority_value(priority):
+    """Checks for values between 0.0 and 1.0
+
+    :param float priority:
+    :return boolean:
+    """
+    if not isinstance(priority, float):
+        return False
+    result = 0 <= priority <= 1
+    return result
+
+def valid_priority_len(priority):
+    """Checks for values with exactly one significant digit
+
+    :param float priority:
+    :return boolean:
+    """
+    result = len(str(priority).rsplit('.')[-1]) == 1
+    return result
 
 # def valid_datetime(value):
 #     """Checks for valid iso8601 datetime values

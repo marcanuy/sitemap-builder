@@ -51,6 +51,24 @@ class TestItemModel(unittest.TestCase):
         
         self.assertEqual(lastmod, item.last_modification)
 
+    def test_changefreq_invalid_value(self):
+        changefreq = "foobar"
+
+        with self.assertRaises(ValueError):
+            item = ItemFactory.build(change_frequency=changefreq)
+        
+    def test_priority_valid_value(self):
+        priority = 0.2
+
+        item = ItemFactory.build(priority=priority)
+        
+        self.assertEqual(priority, item.priority)
+        
+    def test_priority_invalid_value(self):
+        priority = 2
+
+        with self.assertRaises(ValueError):
+            item = ItemFactory.build(priority=priority)
 
 if __name__ == '__main__':
     unittest.main()

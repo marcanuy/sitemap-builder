@@ -1,4 +1,6 @@
-from .validators import *
+from .validators import (valid_uri, valid_uri_length,
+                         valid_change_frequency, valid_priority_value,
+                         valid_priority_len)
 
 CHANGE_FREQ = [
     'always',
@@ -16,19 +18,14 @@ class Item():
     :param str loc: URL of the page. 
     :param str last_mod: The date of last modification of the file.
     :param str change_freq: How frequently the page is likely to change.
-                            <changefreq>monthly</changefreq>
-                            Valid values: always, hourly, daily, weekly,
-                            monthly, yearly, never
-    :param str priority: The priority of this URL relative to other 
+    :param float priority: The priority of this URL relative to other 
                          URLs on your site. 
-                         Valid values range from 0.0 to 1.0.
-                         <priority>0.8</priority>
     """
 
-    def __init__(self, loc="", last_modification=None, change_freq=None, priority=None):
+    def __init__(self, loc="", last_modification=None, change_frequency=None, priority=None):
         self.loc = loc
         self.last_modification = last_modification
-        self.change_freq = change_freq
+        self.change_frequency = change_frequency
         self.priority = priority
 
     @property
@@ -68,5 +65,45 @@ class Item():
         #     raise ValueError("last_modification must contain a valid iso8601 datetime")
         self._last_modification = value
 
+    @property
+    def change_frequency(self):
+        """How frequently the page is likely to change.
+        <changefreq>monthly</changefreq> 
+        Valid values: always, hourly, daily, weekly, monthly, yearly, never
+
+        :return str:
+
+        """
+        return self._change_frequency
+
+    @change_frequency.setter
+    def change_frequency(self, value):
+        if not valid_change_frequency(value):
+            raise ValueError("Changefreq value is not valid")
+        self._change_frequency = value
+
+    @property
+    def priority(self):
+        """The priority of this URL relative to other 
+                         URLs on your site. 
+                         Valid values range from 0.0 to 1.0.
+                         <priority>0.8</priority>
+
+        :return float:
+
+        """
+        return self._priority
+
+    @priority.setter
+    def priority(self, value):
+        if not valid_priority_value(value):
+            raise ValueError("Priority value is not valid")
+        if not valid_priority_len(value):
+            raise ValueError("Priority should have a single significant digit")
+        self._priority = value
+
+
+
     def __str__(self):
-        return "{} - {} - {} - {}".format(self.loc,self.last_mod, self.change_freq, self.priority)
+        """Object String representation"""
+        return "{} - {} - {} - {}".format(self.loc,self.last_mod, self.change_frequency, self.priority)
