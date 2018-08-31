@@ -14,6 +14,8 @@ class TestSitemapClassMethods(unittest.TestCase):
 
         self.assertIn(item, sitemap.urls)
 
+class TestItemModel(unittest.TestCase):
+
     def test_url_can_not_be_empty(self):
         with self.assertRaises(Exception):
             Item(loc="")
@@ -21,20 +23,34 @@ class TestSitemapClassMethods(unittest.TestCase):
     def test_url_should_be_valid(self):
         with self.assertRaises(ValueError):
             Item(loc="bad/url/")
-    
-    def test_upper(self):
-        self.assertEqual('foo'.upper(), 'FOO')
 
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
+    def test_loc_less_than_limit_length(self):
+        url = "http://example.com/{}".format(" " * 2048)
 
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
+        with self.assertRaises(ValueError):
+            Item(loc=url)
+
+    @unittest.skip("to do")
+    def test_lastmod_can_be_empty(self):
+        item = ItemFactory.build(last_modification=None)
+
+        self.assertIsNone(item.last_modification)
+        
+    @unittest.skip("to do")
+    def test_lastmod_invalid(self):
+        lastmod = "123456789019811021"
+
+        with self.assertRaises(ValueError):
+            ItemFactory.build(last_modification=lastmod)
+
+    @unittest.skip("to do")
+    def test_lastmod_can_omit_time_part(self):
+        lastmod = "1981-10-21"
+        
+        item = ItemFactory.build(last_modification=lastmod)
+        
+        self.assertEqual(lastmod, item.last_modification)
+
 
 if __name__ == '__main__':
     unittest.main()

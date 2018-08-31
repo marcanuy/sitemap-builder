@@ -1,4 +1,4 @@
-from .validators import valid_uri
+from .validators import *
 
 CHANGE_FREQ = [
     'always',
@@ -14,12 +14,7 @@ class Item():
     """Model representing a single Sitemap item (data in <url> tag) with all optional tags
 
     :param str loc: URL of the page. 
-    :param str last_mod: The date of last modification of the file. 
-                         This date should be in W3C Datetime format. 
-                         https://www.w3.org/TR/NOTE-datetime (ISO 8601)
-                         This format allows you to omit the time 
-                         portion, if desired, and use YYYY-MM-DD.
-                         <lastmod>2005-01-01</lastmod>
+    :param str last_mod: The date of last modification of the file.
     :param str change_freq: How frequently the page is likely to change.
                             <changefreq>monthly</changefreq>
                             Valid values: always, hourly, daily, weekly,
@@ -30,9 +25,9 @@ class Item():
                          <priority>0.8</priority>
     """
 
-    def __init__(self, loc="", last_mod=None, change_freq=None, priority=None):
+    def __init__(self, loc="", last_modification=None, change_freq=None, priority=None):
         self.loc = loc
-        self.last_mod = last_mod
+        self.last_modification = last_modification
         self.change_freq = change_freq
         self.priority = priority
 
@@ -52,7 +47,26 @@ class Item():
             raise Exception("loc cannot be empty")
         if not valid_uri(value):
             raise ValueError("loc must contain a valid URI")
+        if not valid_uri_length(value):
+            raise ValueError("loc must be less than 2048 characters")
         self._loc = value
-        
+
+    @property
+    def last_modification(self):
+        """The date of last modification of the file.  This date should be in
+        W3C Datetime format.  https://www.w3.org/TR/NOTE-datetime (ISO
+        8601) This format allows you to omit the time portion, if
+        desired, and use YYYY-MM-DD.  <lastmod>2005-01-01</lastmod>
+
+        :return str:
+        """
+        return self._last_modification
+
+    @last_modification.setter
+    def last_modification(self, value):
+        # if not valid_datetime(value):
+        #     raise ValueError("last_modification must contain a valid iso8601 datetime")
+        self._last_modification = value
+
     def __str__(self):
         return "{} - {} - {} - {}".format(self.loc,self.last_mod, self.change_freq, self.priority)
