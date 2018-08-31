@@ -4,9 +4,9 @@ Generate sitemaps from programmatically collected URLs.
 
 # Features
 
+- Adheres to Sitemap Protocal as defined at https://www.sitemaps.org/protocol.html
 - Generates an index that points to compressed sitemaps files
-- each generated sitemap won't have more than the allowed amount of
-  50.000 URLs
+- each generated sitemap won't have more than the allowed amount (50.000 URLs)
 - jinja2 templates
 
 # Install
@@ -56,3 +56,19 @@ Generated files:
     ├── sitemap-2.xml.gz
 	└── sitemap-3.xml.gz
 ~~~
+
+# Development
+
+## Crete virtualenv
+
+~~~
+virtualenv -p /usr/bin/python3.6 ~/.virtualenvs/sitemap-builder
+~~~
+
+Activate it
+
+~~~
+workon sitemap-builder
+make install
+~~~
+
