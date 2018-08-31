@@ -78,7 +78,7 @@ class Item():
 
     @change_frequency.setter
     def change_frequency(self, value):
-        if not valid_change_frequency(value):
+        if value and not valid_change_frequency(value):
             raise ValueError("Changefreq value is not valid")
         self._change_frequency = value
 
@@ -96,9 +96,9 @@ class Item():
 
     @priority.setter
     def priority(self, value):
-        if not valid_priority_value(value):
+        if value and not valid_priority_value(value):
             raise ValueError("Priority value is not valid")
-        if not valid_priority_len(value):
+        if value and not valid_priority_len(value):
             raise ValueError("Priority should have a single significant digit")
         self._priority = value
 
