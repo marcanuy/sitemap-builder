@@ -32,9 +32,9 @@ sitemap = Sitemap()
 3. Add urls to process them later:
 
 ~~~
-sitemap.add_url("dummy-page")
-sitemap.add_url("another-page")
-sitemap.add_url("category/foo-bar")
+sitemap.add_item("dummy-page")
+sitemap.add_item("another-page")
+sitemap.add_item("category/foo-bar")
 ~~~
 
 4. Generate sitemap index and files
