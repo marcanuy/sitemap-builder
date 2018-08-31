@@ -19,6 +19,9 @@ TEMPLATE_ENVIRONMENT = Environment(
     autoescape=select_autoescape(['html', 'xml']),
     extensions=['jinja2.ext.do'])
 
+
+
+
 class Sitemap():
 
     urls = set()
@@ -29,8 +32,8 @@ class Sitemap():
         self.output_dir = output_dir
         self.hostname = hostname
         
-    def add_url(self, url=""):
-        self.urls.add(url)
+    def add_item(self, item):
+        self.urls.add(item)
 
     def get_urls(self):
         return list(self.urls)
