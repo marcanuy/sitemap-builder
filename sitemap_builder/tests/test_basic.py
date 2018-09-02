@@ -1,10 +1,12 @@
 import unittest
+import shutil, tempfile
+import os
 
 from ..factories import ItemFactory, SitemapFactory
-from ..sitemap import Sitemap
-from ..models import Item
+from ..models import Item, Sitemap
+from ..sitemap import SitemapManager
 
-class TestSitemapClassMethods(unittest.TestCase):
+class TestSitemapModel(unittest.TestCase):
 
     def setUp(self):
         self.sitemap = Sitemap()
@@ -18,6 +20,7 @@ class TestSitemapClassMethods(unittest.TestCase):
 
     def test_contains_url(self):
         item = ItemFactory.build()
+
         self.sitemap.urls.add(item)
 
         self.assertTrue(item.loc, self.sitemap)
@@ -34,17 +37,73 @@ class TestSitemapClassMethods(unittest.TestCase):
         self.sitemap.add_item(url)
 
         self.assertIn(url, self.sitemap)
-        
+
+    def test_count(self):
+        item = ItemFactory.build()
+
+        self.sitemap.add_item(item)
+
+        self.assertEqual(self.sitemap.count(), 1)
     
     # def test_generate_sitemap(self):
     #     sitemap = SitemapFactory()
 
     #     sitemap.generate()
 
-    def test_generate_requires_hostname(self):
-        sitemap = SitemapFactory(hostname=None)
+    def test_generate_requires_filename(self):
+        sitemap = Sitemap()
         with self.assertRaises(ValueError):
             sitemap.generate()
+
+
+class TestSitemapManager(unittest.TestCase):
+
+    def setUp(self):
+        self.sitemap_manager = SitemapManager(hostname="https://example.com")
+
+
+    # def tearDown(self):
+    #     # Remove the directory after the test
+    #     shutil.rmtree(self.test_dir)
+
+
+    def test_generate_requires_hostname(self):
+        sitemap = SitemapManager(hostname=None)
+        with self.assertRaises(ValueError):
+            sitemap.generate()
+
+    def create_tmp_dir(self):
+        test_dir = tempfile.mkdtemp()
+        return test_dir
+    
+    def test_generate_index(self):
+        test_dir = self.create_tmp_dir()
+        sitemap = SitemapManager(hostname="https://example.com",
+                                 output_dir=test_dir)
+
+        sitemap.generate()
+
+
+    def test_add_item_instantiates_sitemap(self):
+        self.assertIsNone(self.sitemap_manager.current_sitemap)
+        self.sitemap_manager.add_item("http://foo.com/")
+        self.assertIsInstance(self.sitemap_manager.current_sitemap, Sitemap)
+
+    def test_add_item_adds_sitemap_url_to_sitemaps_urls(self):
+        url = "http://foo.com/"
+
+        self.sitemap_manager.add_item(url)
+
+        self.assertTrue(self.sitemap_manager.current_sitemap.url in self.sitemap_manager.sitemaps_urls)
+
+
+    def test_add_item_to_sitemap(self):
+        item = ItemFactory()
+        self.sitemap_manager.add_item(item)
+
+        sitemap = self.sitemap_manager.current_sitemap
+        self.assertEqual(sitemap.count(), 1)
+        self.assertEqual(sitemap.get_urls()[0], item)
 
 class TestItemModel(unittest.TestCase):
 

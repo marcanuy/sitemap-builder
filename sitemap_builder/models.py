@@ -43,7 +43,7 @@ class Item():
         if not value:
             raise Exception("loc cannot be empty")
         if not valid_uri(value):
-            raise ValueError("loc must contain a valid URI")
+            raise ValueError("loc must contain a valid URI. Currently: {}".format(value))
         if not valid_uri_length(value):
             raise ValueError("loc must be less than 2048 characters")
         self._loc = value
@@ -107,3 +107,55 @@ class Item():
     def __str__(self):
         """Object String representation"""
         return "{} - {} - {} - {}".format(self.loc,self.last_modification, self.change_frequency, self.priority)
+
+class Sitemap():
+
+    def __init__(self, filename=None, url=None):
+        # set of Items to generate the Sitemap
+        self.urls = set()
+        self.filename = filename
+        self.url = url
+            
+    def add_item(self, item):
+        """Adds an item to the sitemap
+        Item can be:
+        - url: add_item("https://example.com/foo")
+        - item: add_item(Item(url="..", priority=0.0, ..))
+
+        :param <str,Item> item:
+        """
+        if isinstance(item, str):
+            item = Item(item)
+        self.urls.add(item)
+
+    def __contains__(self, url):
+        """Checks if sitemap has an item with the url as loc
+        https://docs.python.org/3/reference/datamodel.html#object.__contains__
+
+        :param str url: The url to look for in sitemap's items
+        :return boolean: 
+        """
+        urls = [url.loc for url in self.urls]
+        result = url in urls
+        return result
+        
+    def get_urls(self):
+        return list(self.urls)
+
+    def count(self):
+        return len(self.urls)
+    
+    def create_sitemap_file(self, index, urls):
+        # filename = "sitemaps/sitemap-{}.xml.gz".format(index)
+        # filename_url = "{}/{}".format(self.hostname, filename)
+        template_filename = 'sitemap_file.xml'
+        context = {
+            'urls': urls,
+            'lastmod': date.today().isoformat(),
+        }
+        self._generate_file_compressed(filename, template_filename, context)
+        return filename_url
+
+    def generate(self):
+        if not self.filename:
+            raise ValueError("Hostname required")

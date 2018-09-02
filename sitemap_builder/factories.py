@@ -2,7 +2,6 @@ import factory
 from random import random, randint
 
 from . import models
-from . import sitemap
 
 class ItemFactory(factory.Factory):
     class Meta:
@@ -15,7 +14,7 @@ class ItemFactory(factory.Factory):
 
 class SitemapFactory(factory.Factory):
     class Meta:
-        model = sitemap.Sitemap
+        model = models.Sitemap
 
     hostname = factory.Faker('url', schemes=['http', 'https'])
 
